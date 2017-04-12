@@ -8,7 +8,10 @@
       var v1 = new vec3(5,4,8);
       var v2 = new vec3(2,1,7);
       var v = v1.add(v2);
-      var sum - v.sum();
+      var sum = v.sum();
+
+      text = 'Answer : ';
+      document.write('Answer : ');
       </script>
   </body>
 </html>

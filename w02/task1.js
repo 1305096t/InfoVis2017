@@ -1,4 +1,4 @@
-finction calcV(x, y, z){
+function calcV(x, y, z){
 
     var x=5, y=4, z=8;
     var v = new vec3(x, y, z);
