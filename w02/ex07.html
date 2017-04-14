@@ -3,7 +3,6 @@
     <title>w02: Example 07</title>
   </head>
   <body>
-    <p id='target'></p>
     <script src="vec3.js"></script>
     <script>
       var v1 = new vec3(5,4,8);
@@ -11,8 +10,7 @@
       var v = v1.add(v2);
       var sum = v.sum();
 
-      var text = 'Answer ' + sum + '<br>';
-      document.getElementById("target").innetHTML = text;
+      document.write(sum);
       </script>
   </body>
 </html>
