@@ -64,8 +64,8 @@ function main()
     geometry.faces[0].vertexColors.push(new THREE.Color(0,0,1));
     material.side = THREE.DoubleSide;
     
-    var triangle = new THREE.Mesh( geometry, material );
-    scene.add( triangle );
+    var cube = new THREE.Mesh( geometry, material );
+    scene.add( cube );
 
     
     loop();
@@ -73,8 +73,8 @@ function main()
     function loop()
     {
         requestAnimationFrame( loop );
-        triangle.rotation.x += 0.001;
-        triangle.rotation.y += 0.001;
+        cube.rotation.x += 0.001;
+        cube.rotation.y += 0.001;
         renderer.render( scene, camera );
     }
 }
