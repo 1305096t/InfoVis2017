@@ -58,8 +58,8 @@ function main()
     var material = new THREE.MeshLambertMaterial();
     for(i=0; i<12; i++){
 	geometry.faces.push(new THREE.Face3(faces[i][0], faces[i][1], faces[i][2]));
-	material.vertexColors = THREE.FaceColors;
-	geometry.faces[i].color = new THREE.Color( 1/i, 1-1/i, 1/2+1/(2*i) );
+	//material.vertexColors = THREE.FaceColors;
+	//geometry.faces[i].color = new THREE.Color( 1/i, 1-1/i, 1/2+1/(2*i) );
     }
     geometry.computeFaceNormals();
     
@@ -76,8 +76,8 @@ function main()
     var light = new THREE.PointLight( 0xffffff );
     light.position.set( 2, 1, 4 );
     scene.add( light );
-    //var pointLightHelper = new THREE.PointLightHelper( light, 1);//(光源,ヘルパーオブジェクトの大きさ)
-    //scene.add( pointLightHelper);
+    var pointLightHelper = new THREE.PointLightHelper( light, 1);//(光源,ヘルパーオブジェクトの大きさ)
+    scene.add( pointLightHelper);
     
     loop();
 
