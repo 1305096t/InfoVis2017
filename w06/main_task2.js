@@ -43,19 +43,25 @@ function main()
 	[2,6,5]  // f11: v2-v6-v5
     ];
 
-    var i;
     var geometry = new THREE.Geometry();
-    geometry.computeFaceNormals();
+    var i;
     for(i=0; i<8; i++){
 	geometry.vertices.push(new THREE.Vector3().fromArray(vertices[i]));
     }
     
-    var material = new THREE.MeshBasicMaterial();
+    //var material = new THREE.MeshBasicMaterial();
+    /*
+      var material = new THREE.MeshLambertMaterial({
+	color: 0xffffff
+    });
+    */
+    var material = new THREE.MeshLambertMaterial();
     for(i=0; i<12; i++){
 	geometry.faces.push(new THREE.Face3(faces[i][0], faces[i][1], faces[i][2]));
 	material.vertexColors = THREE.FaceColors;
 	geometry.faces[i].color = new THREE.Color( 1/i, 1-1/i, 1/2+1/(2*i) );
     }
+    geometry.computeFaceNormals();
     
 
     material.vertexColors = THREE.VertexColors;
@@ -67,7 +73,53 @@ function main()
     var cube = new THREE.Mesh( geometry, material );
     scene.add( cube );
 
-    
+    var light = new THREE.PointLight( 0xffffff );
+    light.position.set( 2, 1, 4 );
+    scene.add( light );
+    //var pointLightHelper = new THREE.PointLightHelper( light, 1);//(光源,ヘルパーオブジェクトの大きさ)
+    //scene.add( pointLightHelper);
+
+
+    // Task2(mouseEvent)
+    document.addEventListener( "mousedown", mouse_down_event); 
+    function mouse_down_event( event )
+    {
+        var x_win = event.clientX;
+        var y_win = event.clientY;
+
+        //window.alert("x : "+x_win+" y : "+y_win);
+
+        var vx = renderer.domElement.offsetLeft;
+        var vy = renderer.domElement.offsetTop;
+        var vw = renderer.domElement.width;
+        var vh = renderer.domElement.height;
+        var x_NDC = 2 * ( x_win-vx) / vw-1;
+        var y_NDC = -( 2 * ( y_win-vy) / vh-1 );
+        //window.alert("x : "+x_NDC+" y : "+y_NDC);
+
+        var p_NDC = new THREE.Vector3( x_NDC, y_NDC, 1 );
+        var p_wld = p_NDC.unproject( camera );
+
+        //var origin = camera.position;
+        //var origin = p_wld;
+        window.alert("x : "+origin.x+" y : "+origin.y+" z : "+origin.z)
+        var cam_wld = camera.position.unproject( camera );
+        //window.alert("x : "+camera.position.x+" y : "+camera.position.y+" z : "+camera.position.z)
+        window.alert("x : "+cam_wld.x+" y : "+cam_wld.y+" z : "+cam_wld.z)
+        var direction = new THREE.Vector3(origin.x-cam_wld.x, origin.y-cam_wld.y, origin.z-cam_wld.z);
+        window.alert("x : "+direction.x+" y : "+direction.y+" z : "+direction.z)
+        //var direction = new THREE.Vector3(0, 0, 1);
+
+        var raycaster = new THREE.Raycaster( origin, direction );
+        var intersects = raycaster.intersectObject( cube );
+        window.alert(intersects.length);
+        if ( intersects.length > 0 )
+        {
+            intersects[0].face.color.setRGB( 1, 0, 0 ); 
+            intersects[0].object.geometry.colorsNeedUpdate = true;
+        }
+    }
+   
     loop();
 
     function loop()
