@@ -100,19 +100,14 @@ function main()
         var p_NDC = new THREE.Vector3( x_NDC, y_NDC, 1 );
         var p_wld = p_NDC.unproject( camera );
 
-        //var origin = camera.position;
-        //var origin = p_wld;
-        window.alert("x : "+origin.x+" y : "+origin.y+" z : "+origin.z)
-        var cam_wld = camera.position.unproject( camera );
-        //window.alert("x : "+camera.position.x+" y : "+camera.position.y+" z : "+camera.position.z)
-        window.alert("x : "+cam_wld.x+" y : "+cam_wld.y+" z : "+cam_wld.z)
-        var direction = new THREE.Vector3(origin.x-cam_wld.x, origin.y-cam_wld.y, origin.z-cam_wld.z);
-        window.alert("x : "+direction.x+" y : "+direction.y+" z : "+direction.z)
-        //var direction = new THREE.Vector3(0, 0, 1);
-
+        var origin = camera.position;
+        //window.alert("x : "+origin.x+" y : "+origin.y+" z : "+origin.z)
+        var direction = p_NDC.sub( camera.position ).normalize();
+        //window.alert("x : "+direction.x+" y : "+direction.y+" z : "+direction.z)
+        
         var raycaster = new THREE.Raycaster( origin, direction );
         var intersects = raycaster.intersectObject( cube );
-        window.alert(intersects.length);
+        //window.alert(intersects.length);
         if ( intersects.length > 0 )
         {
             intersects[0].face.color.setRGB( 1, 0, 0 ); 
