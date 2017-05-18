@@ -24,18 +24,21 @@ function main()
     var vertices = [
         [ -1,  1, 0 ], // 0
         [ -1, -1, 0 ], // 1
-        [  1, -1, 0 ]  // 2
+        [  1, -1, 0 ], // 2
+        [  1,  1, 0 ]  // 3
     ];
 
     var faces = [
         [ 0, 1, 2 ], // f0
+        [ 0, 2, 3 ]  // f1
     ];
 
 
     var scalars = [
         0.1, // S0
         0.2, // S1
-        0.8  // S2
+        0.8, // S2
+        0.5  // S3
     ];
 
     // Create color map
@@ -43,12 +46,9 @@ function main()
     for ( var i = 0; i < 256; i++ )
     {
         var S = i / 255.0; // [0,1]
-        //var R = Math.max( Math.cos( ( S - 1.0 ) * Math.PI ), 0.0 );
-        //var G = 0.0;
-        //var B = 0.0;
-        var R = 1.0;
-        var G = Math.min( Math.cos( S * Math.PI / 2 ), 1.0 );
-        var B = Math.min( Math.cos( S * Math.PI / 2 ), 1.0 )
+        var R = Math.max( Math.cos( ( S - 1.0 ) * Math.PI ), 0.0 );
+        var G = Math.max( Math.cos( ( S - 0.5 ) * Math.PI ), 0.0 );
+        var B = Math.max( Math.cos( S * Math.PI ), 0.0 );
         var color = new THREE.Color( R, G, B );
         cmap.push( [ S, '0x' + color.getHexString() ] );
     }
