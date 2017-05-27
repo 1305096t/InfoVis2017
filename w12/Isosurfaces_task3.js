@@ -1,7 +1,18 @@
 function Isosurfaces( volume, isovalue )
 {
     var geometry = new THREE.Geometry();
-    var material = new THREE.MeshLambertMaterial();
+
+    var light = new THREE.PointLight();
+    light.position.set( 5, 5, 5 );
+
+    var material = new THREE.ShaderMaterial({
+      vertexColors: THREE.VertexColors,
+      vertexShader: document.getElementById('gouraud.vert').text,
+      fragmentShader: document.getElementById('gouraud.frag').text,
+      uniforms: {
+        light_position: { type: 'v3', value: light.position }
+      }
+    });
 
     var smin = volume.min_value;
     var smax = volume.max_value;
@@ -134,6 +145,30 @@ function Isosurfaces( volume, isovalue )
 
     function interpolated_vertex( v0, v1, s )
     {
-        return new THREE.Vector3().addVectors( v0, v1 ).divideScalar( 2 );
+        var lines = volume.resolution.x;
+        var slices = volume.resolution.x * volume.resolution.y;
+        
+	var S0 = volume.values[ v0.x+lines*v0.y+slices*v0.z ][0];
+	var S1 = volume.values[ v1.x+lines*v1.y+slices*v1.z ][0];
+        
+	var t = 0;
+	
+	if(S0 < S1){
+            t = (s-S0)/(S1-S0);
+	    var x = t*(v1.x-v0.x)+v0.x;
+	    var y = t*(v1.y-v0.y)+v0.y;
+	    var z = t*(v1.z-v0.z)+v0.z;
+	} else if(S0 == S1){
+	    var x = (v1.x+v0.x)/2;
+	    var y = (v1.y+v0.y)/2;
+	    var z = (v1.z+v0.z)/2;
+	} else{
+	    t = (s-S1)/(S0-S1);
+	    var x = t*(v0.x-v1.x)+v1.x;
+	    var y = t*(v0.y-v1.y)+v1.y;
+	    var z = t*(v0.z-v1.z)+v1.z;
+	}
+        
+        return new THREE.Vector3(x, y, z);
     }
 }

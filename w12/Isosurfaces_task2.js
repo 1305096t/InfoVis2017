@@ -62,7 +62,31 @@ function Isosurfaces( volume, isovalue )
 
     geometry.computeVertexNormals();
 
-    material.color = new THREE.Color( "white" );
+
+    // Create color map
+    var cmap = [];
+    for ( var i = 0; i < 256; i++ )
+    {
+        var S = i / 255.0; // [0,1]
+        var R = Math.max( Math.cos( ( S - 1.0 ) * Math.PI ), 0.0 );
+        var G = Math.max( Math.cos( ( S - 0.5 ) * Math.PI ), 0.0 );
+        var B = Math.max( Math.cos( S * Math.PI ), 0.0 );
+        var color = new THREE.Color( R, G, B );
+        cmap.push( [ S, '0x' + color.getHexString() ] );
+    }
+
+    var nfaces = geometry.faces.length;
+    // Assign colors for each vertex
+    material.vertexColors = THREE.VertexColors;
+    for ( var i = 0; i < nfaces; i++ )
+    {
+        var C0 = new THREE.Color().setHex( cmap[ isovalue ][1] );
+        var C1 = new THREE.Color().setHex( cmap[ isovalue ][1] );
+        var C2 = new THREE.Color().setHex( cmap[ isovalue ][1] );
+        geometry.faces[i].vertexColors.push( C0 );
+        geometry.faces[i].vertexColors.push( C1 );
+        geometry.faces[i].vertexColors.push( C2 );
+    }
 
     return new THREE.Mesh( geometry, material );
 
@@ -110,7 +134,30 @@ function Isosurfaces( volume, isovalue )
 
     function interpolated_vertex( v0, v1, s )
     {
-        var tmpVec = new THREE.Vector3().addVectors( v0, v1 );
-        return tmpVec.divideScalar(2);
+        var lines = volume.resolution.x;
+        var slices = volume.resolution.x * volume.resolution.y;
+        
+	var S0 = volume.values[ v0.x+lines*v0.y+slices*v0.z ][0];
+	var S1 = volume.values[ v1.x+lines*v1.y+slices*v1.z ][0];
+        
+	var t = 0;
+	
+	if(S0 < S1){
+            t = (s-S0)/(S1-S0);
+	    var x = t*(v1.x-v0.x)+v0.x;
+	    var y = t*(v1.y-v0.y)+v0.y;
+	    var z = t*(v1.z-v0.z)+v0.z;
+	} else if(S0 == S1){
+	    var x = (v1.x+v0.x)/2;
+	    var y = (v1.y+v0.y)/2;
+	    var z = (v1.z+v0.z)/2;
+	} else{
+	    t = (s-S1)/(S0-S1);
+	    var x = t*(v0.x-v1.x)+v1.x;
+	    var y = t*(v0.y-v1.y)+v1.y;
+	    var z = t*(v0.z-v1.z)+v1.z;
+	}
+        
+        return new THREE.Vector3(x, y, z);
     }
 }

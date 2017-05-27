@@ -64,29 +64,12 @@ function Isosurfaces( volume, isovalue )
 
 
     // Create color map
-    var cmap = [];
-    for ( var i = 0; i < 256; i++ )
-    {
-        var S = i / 255.0; // [0,1]
-        var R = Math.max( Math.cos( ( S - 1.0 ) * Math.PI ), 0.0 );
-        var G = Math.max( Math.cos( ( S - 0.5 ) * Math.PI ), 0.0 );
-        var B = Math.max( Math.cos( S * Math.PI ), 0.0 );
-        var color = new THREE.Color( R, G, B );
-        cmap.push( [ S, '0x' + color.getHexString() ] );
-    }
-
-    var nfaces = geometry.faces.length;
-    // Assign colors for each vertex
-    material.vertexColors = THREE.VertexColors;
-    for ( var i = 0; i < nfaces; i++ )
-    {
-        var C0 = new THREE.Color().setHex( cmap[ isovalue ][1] );
-        var C1 = new THREE.Color().setHex( cmap[ isovalue ][1] );
-        var C2 = new THREE.Color().setHex( cmap[ isovalue ][1] );
-        geometry.faces[i].vertexColors.push( C0 );
-        geometry.faces[i].vertexColors.push( C1 );
-        geometry.faces[i].vertexColors.push( C2 );
-    }
+    var S = isovalue / 255.0; // [0,1]
+    var R = Math.max( Math.cos( ( S - 1.0 ) * Math.PI ), 0.0 );
+    var G = Math.max( Math.cos( ( S - 0.5 ) * Math.PI ), 0.0 );
+    var B = Math.max( Math.cos( S * Math.PI ), 0.0 );
+    var color = new THREE.Color( R, G, B );
+    material.color = new THREE.Color( color );
 
     return new THREE.Mesh( geometry, material );
 
