@@ -1,5 +1,5 @@
-function changeIsovalueFunction( isovalue )
+function changeIsovalueFunction()
 {
-  document.getElementById('fotter').innerHTML = isovalue;
-
+  document.getElementById("applyNumber").innerHTML =  " isovalue = "+document.getElementById("isovalue").value;
+  return document.getElementById("isovalue").value;
 }

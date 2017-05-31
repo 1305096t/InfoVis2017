@@ -95,8 +95,8 @@ function TransferFunctionTexture()
     var data = new Float32Array( width * height * 4 );
     for ( var i = 0; i < resolution; i++ )
     {
-        var color = KVS.RainbowColorMap( 0, 255, i );
-        var alpha = i / 255.0;
+        var color = KVS.RainbowColorMap( 0, 255*changeIsovalueFunction(), i );
+        var alpha = (i / 255.0);
         data[ 4 * i + 0 ] = color.x;
         data[ 4 * i + 1 ] = color.y;
         data[ 4 * i + 2 ] = color.z;
@@ -197,4 +197,17 @@ function main()
         screen.renderer.render( screen.scene, screen.camera );
         screen.trackball.update();
     }
+}
+
+function changeIsovalueFunction()
+{
+  var isovalue;
+  if(document.getElementById("isovalue")==null){
+    isovalue = 1;
+  } else{
+    isovalue = document.getElementById("isovalue").value;
+    document.getElementById("applyNumber").innerHTML =  " isovalue = "+isovalue;
+  }
+
+  return isovalue;
 }
